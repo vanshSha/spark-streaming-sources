@@ -15,21 +15,26 @@ public class StreamingAppThroughKafka {
                 .master("local[*]")
                 .getOrCreate();
 
-        Dataset<Row> kafkaDf = sparkSession.readStream()
+        Dataset<Row> Kafka = sparkSession.readStream()
                 .format("kafka")
                 .option("kafka.bootstrap.servers", "localhost:9092")
                 .option("subscribe", "first-attempt")
                 .option("startingOffsets", "earliest")
                 .load();
 
-        Dataset<Row> messages = kafkaDf.selectExpr(
-                "CAST(value AS STRING) as message"
-        );
+        /*  subscribe : Subscribe to one topic
+            subscribePattern : Subscribe to multiple topics  */
+
+        Dataset<Row> messages = Kafka.selectExpr("CAST(value AS STRING) as message");
 
         messages.writeStream()
                 .format("console")
                 .outputMode("append")
                 .option("checkpointLocation", "/tmp/kafka-checkpoint")
+                /*
+                checkpointLocation : Where Spark saves its progress so it can continue after a crash.
+                /tmp/kafka-checkpoint : It is a folder path where spark save progress file
+                 */
                 .start()
                 .awaitTermination();
 
