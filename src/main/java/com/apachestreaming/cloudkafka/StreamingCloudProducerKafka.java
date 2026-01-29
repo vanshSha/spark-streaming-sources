@@ -7,6 +7,9 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Properties;
 
+// I want to use this then first use Environmental Variable
+// KAFKA_API_KEY, KAFKA_SECRET_KEY
+
 public class StreamingCloudProducerKafka {
     private static final String TOPIC = "hello";
 
@@ -64,7 +67,8 @@ public class StreamingCloudProducerKafka {
                                 "Sent -> topic=" + metadata.topic() +
                                         ", partition=" + metadata.partition() +
                                         ", offset=" + metadata.offset()
-                        );}
+                        );
+                    }
                 });
             }
         } catch (Exception e) {
